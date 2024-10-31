@@ -1,8 +1,8 @@
-package backend.academy.analyser.record.source.impl;
+package backend.academy.analyser.record.stream.source.impl;
 
-import backend.academy.analyser.LogParser;
+import backend.academy.analyser.record.stream.parse.LogParser;
 import backend.academy.analyser.record.LogRecord;
-import backend.academy.analyser.record.source.LogRecordStreamSource;
+import backend.academy.analyser.record.stream.source.LogRecordStreamSource;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 public class HttpLogRecordStreamSource implements LogRecordStreamSource {

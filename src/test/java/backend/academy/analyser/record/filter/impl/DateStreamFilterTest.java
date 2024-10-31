@@ -1,10 +1,11 @@
 package backend.academy.analyser.record.filter.impl;
 
-import backend.academy.analyser.LogParser;
+import backend.academy.analyser.record.stream.parse.LogParser;
 import backend.academy.analyser.record.LogRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,7 +32,7 @@ public class DateStreamFilterTest {
         AfterDateStreamFilter afterDateFilter = new AfterDateStreamFilter();
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
-        Stream<LogRecord> afterDateStream = afterDateFilter.applyFilter(stream, afterDate);
+        Stream<LogRecord> afterDateStream = afterDateFilter.applyFilter(stream, LocalDate.parse(afterDate));
 
         assertEquals(expectedCount, afterDateStream.count());
     }
@@ -43,7 +44,7 @@ public class DateStreamFilterTest {
         BeforeDateStreamFilter beforeDateFilter = new BeforeDateStreamFilter();
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
-        Stream<LogRecord> beforeDateStream = beforeDateFilter.applyFilter(stream, beforeDate);
+        Stream<LogRecord> beforeDateStream = beforeDateFilter.applyFilter(stream, LocalDate.parse(beforeDate));
 
         assertEquals(expectedCount, beforeDateStream.count());
     }

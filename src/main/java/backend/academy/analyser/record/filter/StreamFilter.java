@@ -3,6 +3,6 @@ package backend.academy.analyser.record.filter;
 import backend.academy.analyser.record.LogRecord;
 import java.util.stream.Stream;
 
-public interface StreamFilter {
-    Stream<LogRecord> applyFilter(Stream<LogRecord> stream, String value);
+public interface StreamFilter<T> {
+    Stream<LogRecord> applyFilter(Stream<LogRecord> stream, T value);
 }

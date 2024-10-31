@@ -6,10 +6,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.stream.Stream;
 
-public class BeforeDateStreamFilter implements StreamFilter {
+public class BeforeDateStreamFilter implements StreamFilter<LocalDate> {
     @Override
-    public Stream<LogRecord> applyFilter(Stream<LogRecord> stream, String value) {
+    public Stream<LogRecord> applyFilter(Stream<LogRecord> stream, LocalDate value) {
         return stream.filter(r -> r.timeZoned()
-            .isBefore(LocalDate.parse(value).atStartOfDay(ZoneId.systemDefault())));
+            .isBefore(value.atStartOfDay(ZoneId.systemDefault())));
     }
 }

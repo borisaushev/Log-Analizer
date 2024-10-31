@@ -1,7 +1,6 @@
-package backend.academy.analyser.record.source;
+package backend.academy.analyser.record.stream.source;
 
 import backend.academy.analyser.record.LogRecord;
-import java.io.IOException;
 import java.util.stream.Stream;
 
 public interface LogRecordStreamSource {

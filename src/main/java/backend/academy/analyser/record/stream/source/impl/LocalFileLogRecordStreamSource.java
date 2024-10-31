@@ -1,8 +1,8 @@
-package backend.academy.analyser.record.source.impl;
+package backend.academy.analyser.record.stream.source.impl;
 
-import backend.academy.analyser.LogParser;
+import backend.academy.analyser.record.stream.parse.LogParser;
 import backend.academy.analyser.record.LogRecord;
-import backend.academy.analyser.record.source.LogRecordStreamSource;
+import backend.academy.analyser.record.stream.source.LogRecordStreamSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;

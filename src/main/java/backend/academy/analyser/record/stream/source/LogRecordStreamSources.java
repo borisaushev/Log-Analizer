@@ -1,7 +1,7 @@
-package backend.academy.analyser.record.source;
+package backend.academy.analyser.record.stream.source;
 
-import backend.academy.analyser.record.source.impl.HttpLogRecordStreamSource;
-import backend.academy.analyser.record.source.impl.LocalFileLogRecordStreamSource;
+import backend.academy.analyser.record.stream.source.impl.HttpLogRecordStreamSource;
+import backend.academy.analyser.record.stream.source.impl.LocalFileLogRecordStreamSource;
 
 public enum LogRecordStreamSources {
     LOCAL_FILE(

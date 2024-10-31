@@ -1,4 +1,4 @@
-package backend.academy.analyser;
+package backend.academy.analyser.record.stream.parse;
 
 import backend.academy.analyser.record.LogRecord;
 import java.time.ZonedDateTime;
@@ -10,19 +10,18 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class LogParser {
-    // Регулярное выражение для разбора строки лога
+    // Regex to parse log records
     private static final Pattern LOG_PATTERN = Pattern.compile(
         "^(\\S+)\\s+-\\s+(\\S+)\\s+\\[(.+?)]\\s+\"(.+?)\"\\s+(\\d{3})\\s+(\\d+)\\s+\"(.*?)\"\\s+\"(.*?)\"$"
     );
 
-    // Формат даты
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.of("RUS"));
 
-    // Метод, который принимает строку лога и возвращает LogRecord
+    //TODO: document
     public static LogRecord parseLogLine(String logLine) {
         Matcher matcher = LOG_PATTERN.matcher(logLine);
         if (!matcher.matches()) {
-            throw new IllegalArgumentException("Неверный формат строки лога: " + logLine);
+            return null;
         }
 
         String remoteAddress = matcher.group(1);
@@ -40,17 +39,9 @@ public class LogParser {
         return new LogRecord(remoteAddress, remoteUser, timeZoned, httpMethod, uri, httpVersion, status, bodyBytesSent, httpReferer, httpUserAgent);
     }
 
-    // Метод, который принимает Stream<String> и возвращает Stream<LogRecord>
+    //TODO: document
     public static Stream<LogRecord> parseLogStream(Stream<String> logLines) {
-        return logLines.map(line -> {
-            try {
-                return parseLogLine(line);
-            } catch (IllegalArgumentException e) {
-                // Логирование или обработка ошибки
-                System.err.println("Ошибка при разборе строки: " + e.getMessage());
-                return null;
-            }
-        }).filter(Objects::nonNull); // Фильтруем нераспознанные строки
+        return logLines.map(LogParser::parseLogLine).filter(Objects::nonNull);
     }
 }
 

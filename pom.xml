@@ -82,6 +82,20 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.81</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.datadoghq/sketches-java -->
+        <dependency>
+            <groupId>com.datadoghq</groupId>
+            <artifactId>sketches-java</artifactId>
+            <version>0.8.2</version>
+        </dependency>
+
+
         <!-- Core -->
         <dependency>
             <groupId>org.jspecify</groupId>

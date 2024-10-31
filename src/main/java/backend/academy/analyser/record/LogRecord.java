@@ -9,7 +9,7 @@ public record LogRecord(
     String httpMethod,
     String uri,
     String httpVersion,
-    int status,
+    int statusCode,
     int bodyBytesSent,
     String httpReferer,
     String httpUserAgent) {
