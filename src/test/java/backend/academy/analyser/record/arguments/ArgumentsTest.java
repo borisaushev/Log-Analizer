@@ -1,5 +1,6 @@
 package backend.academy.analyser.record.arguments;
 
+import backend.academy.analyser.LogAnalyser;
 import backend.academy.analyser.arguments.Arguments;
 import com.beust.jcommander.JCommander;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +54,7 @@ class ArgumentsTest {
 
     @Test
     @DisplayName("not all required parameters")
-    void notAllReArgumentsTest() {
+    void notAllRequiredArgumentsTest() {
         String[] args = {
             "--from", "2024-08-31",
             "--format", "markdown"
@@ -64,5 +65,19 @@ class ArgumentsTest {
             .build();
 
         assertThrows(Exception.class, () -> commander.parse(args));
+    }
+
+    @Test
+    @DisplayName("with unknown arguments")
+    void unknownArgumentsTest() {
+        String[] args = {
+            "--path", "logs/logs.txt",
+            "--from", "2024-08-31",
+            "--format", "markdown",
+            "--notReal", "RyanGosling"
+        };
+        Arguments jArgs = new Arguments();
+        
+        assertDoesNotThrow(() -> new LogAnalyser().parseArguments(jArgs, args));
     }
 }

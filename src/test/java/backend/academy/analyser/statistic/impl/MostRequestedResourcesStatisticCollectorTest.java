@@ -15,7 +15,7 @@ class MostRequestedResourcesStatisticCollectorTest {
     public void topRequestedTest() throws InterruptedException {
         String path = "src/main/resources/testLogs.txt";
         Stream<LogRecord> stream = new LocalFileLogRecordStreamSource().getLogRecordStream(path);
-        StatisticsCollector statisticCollector = new LeastRequestedResourcesStatisticCollector();
+        StatisticsCollector statisticCollector = new MostRequestedResourcesStatisticCollector();
         String expectedTop1 = "/downloads/product_1";
         String expectedTop2 = "/downloads/product_2";
         String expectedTop3 = "/downloads/product_3";

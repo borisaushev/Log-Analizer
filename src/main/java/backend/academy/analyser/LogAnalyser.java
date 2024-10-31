@@ -1,11 +1,11 @@
 package backend.academy.analyser;
 
 import backend.academy.analyser.arguments.Arguments;
+import backend.academy.analyser.format.ReportTable;
 import backend.academy.analyser.format.TableFormatters;
+import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.record.filter.impl.AfterDateStreamFilter;
 import backend.academy.analyser.record.filter.impl.BeforeDateStreamFilter;
-import backend.academy.analyser.format.ReportTable;
-import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.record.stream.source.LogRecordStreamSources;
 import backend.academy.analyser.statistic.StatisticsCollectors;
 import com.beust.jcommander.JCommander;
@@ -13,9 +13,7 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class LogAnalyser {
 
     public void analise(String[] args) {
@@ -39,19 +37,20 @@ public class LogAnalyser {
         System.out.println(output);
     }
 
-    private void parseArguments(Arguments arguments, String[] args) {
+    public void parseArguments(Arguments arguments, String[] args) {
         JCommander commander = JCommander.newBuilder()
             .addObject(arguments)
+            .acceptUnknownOptions(true)
             .build();
         commander.parse(args);
     }
 
     public String formatStatistics(String format, List<ReportTable> reportTableList) {
         StringBuilder output = new StringBuilder();
-        for(TableFormatters tableFormatter : TableFormatters.values()) {
+        for (TableFormatters tableFormatter : TableFormatters.values()) {
             //If we matched the format, return formatted output
-            if(tableFormatter.value.equalsIgnoreCase(format)) {
-                for(ReportTable reportTable : reportTableList) {
+            if (tableFormatter.value.equalsIgnoreCase(format)) {
+                for (ReportTable reportTable : reportTableList) {
                     output.append(tableFormatter.strategy.formatTable(reportTable));
                     output.append('\n');
                 }
@@ -64,13 +63,13 @@ public class LogAnalyser {
 
     public List<ReportTable> collectStatistics(Stream<LogRecord> logRecordStream) {
         logRecordStream.forEach(r -> {
-            for(StatisticsCollectors statisticsCollector : StatisticsCollectors.values()) {
+            for (StatisticsCollectors statisticsCollector : StatisticsCollectors.values()) {
                 statisticsCollector.strategy.include(r);
             }
         });
 
         List<ReportTable> reportTableList = new LinkedList<>();
-        for(StatisticsCollectors statisticsCollector : StatisticsCollectors.values()) {
+        for (StatisticsCollectors statisticsCollector : StatisticsCollectors.values()) {
             reportTableList.add(statisticsCollector.strategy.getStatistic());
         }
 
@@ -85,10 +84,10 @@ public class LogAnalyser {
         AfterDateStreamFilter afterDateStreamFilter = new AfterDateStreamFilter();
         BeforeDateStreamFilter beforeDateStreamFilter = new BeforeDateStreamFilter();
 
-        if(dateAfter != null) {
+        if (dateAfter != null) {
             logRecordStream = afterDateStreamFilter.filterStream(logRecordStream, dateAfter);
         }
-        if(dateBefore != null) {
+        if (dateBefore != null) {
             logRecordStream = beforeDateStreamFilter.filterStream(logRecordStream, dateBefore);
         }
         return logRecordStream;
