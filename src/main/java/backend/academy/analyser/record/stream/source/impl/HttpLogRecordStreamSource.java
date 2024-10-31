@@ -24,9 +24,16 @@ public class HttpLogRecordStreamSource implements LogRecordStreamSource {
 
         try {
             HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.body()))) {
-                return LogParser.parseLogStream(reader.lines()).toList().stream();
-            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.body()));
+            // Wrapping Stream<LogRecord> so that BufferedReader is closed when the Stream is closed
+            return LogParser.parseLogStream(reader.lines())
+                .onClose(() -> {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
         } catch (IOException | InterruptedException exc) {
             return Stream.of();
         }
