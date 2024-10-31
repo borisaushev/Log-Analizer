@@ -12,10 +12,8 @@ import com.beust.jcommander.JCommander;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.stream.Streams;
 
 @AllArgsConstructor
 public class LogAnalyser {
@@ -88,10 +86,10 @@ public class LogAnalyser {
         BeforeDateStreamFilter beforeDateStreamFilter = new BeforeDateStreamFilter();
 
         if(dateAfter != null) {
-            logRecordStream = afterDateStreamFilter.applyFilter(logRecordStream, dateAfter);
+            logRecordStream = afterDateStreamFilter.filterStream(logRecordStream, dateAfter);
         }
         if(dateBefore != null) {
-            logRecordStream = beforeDateStreamFilter.applyFilter(logRecordStream, dateBefore);
+            logRecordStream = beforeDateStreamFilter.filterStream(logRecordStream, dateBefore);
         }
         return logRecordStream;
     }

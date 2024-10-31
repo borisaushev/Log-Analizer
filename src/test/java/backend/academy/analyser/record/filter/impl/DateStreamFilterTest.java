@@ -32,7 +32,7 @@ public class DateStreamFilterTest {
         AfterDateStreamFilter afterDateFilter = new AfterDateStreamFilter();
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
-        Stream<LogRecord> afterDateStream = afterDateFilter.applyFilter(stream, LocalDate.parse(afterDate));
+        Stream<LogRecord> afterDateStream = afterDateFilter.filterStream(stream, LocalDate.parse(afterDate));
 
         assertEquals(expectedCount, afterDateStream.count());
     }
@@ -44,7 +44,7 @@ public class DateStreamFilterTest {
         BeforeDateStreamFilter beforeDateFilter = new BeforeDateStreamFilter();
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
-        Stream<LogRecord> beforeDateStream = beforeDateFilter.applyFilter(stream, LocalDate.parse(beforeDate));
+        Stream<LogRecord> beforeDateStream = beforeDateFilter.filterStream(stream, LocalDate.parse(beforeDate));
 
         assertEquals(expectedCount, beforeDateStream.count());
     }

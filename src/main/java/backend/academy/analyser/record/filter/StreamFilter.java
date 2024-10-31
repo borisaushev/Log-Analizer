@@ -4,5 +4,5 @@ import backend.academy.analyser.record.LogRecord;
 import java.util.stream.Stream;
 
 public interface StreamFilter<T> {
-    Stream<LogRecord> applyFilter(Stream<LogRecord> stream, T value);
+    Stream<LogRecord> filterStream(Stream<LogRecord> stream, T value);
 }

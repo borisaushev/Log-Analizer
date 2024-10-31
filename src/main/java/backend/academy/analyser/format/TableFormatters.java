@@ -4,7 +4,7 @@ import backend.academy.analyser.format.impl.AsciiDocTableFormatter;
 import backend.academy.analyser.format.impl.MarkdownTableFormatter;
 
 public enum TableFormatters {
-    ADOC("adoc", new AsciiDocTableFormatter()),
+    AsciiDOC("adoc", new AsciiDocTableFormatter()),
     MARKDOWN("markdown", new MarkdownTableFormatter());
 
     public final String value;

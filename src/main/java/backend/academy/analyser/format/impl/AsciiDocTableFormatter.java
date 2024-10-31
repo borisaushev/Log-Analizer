@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AsciiDocTableFormatter implements TableFormatter {
-    // Метод для вычисления максимальной ширины для каждого столбца
+    // Method to calculate the maximum width for each column
     private List<Integer> calculateColumnWidths(ReportTable reportTable) {
         List<Integer> widths = new ArrayList<>();
 
-        // Начальные значения ширин — это длины заголовков столбцов
+        // Initial widths are set to the lengths of column headers
         for (String column : reportTable.columns()) {
             widths.add(column.length());
         }
 
-        // Проходим по каждой записи и обновляем ширину для каждого столбца
+        // Iterate through each entry and update the width for each column
         for (List<Object> entry : reportTable.entries()) {
             for (int i = 0; i < entry.size(); i++) {
                 int valueLength = entry.get(i) != null ? entry.get(i).toString().length() : 0;
@@ -31,22 +31,22 @@ public class AsciiDocTableFormatter implements TableFormatter {
         List<Integer> columnWidths = calculateColumnWidths(reportTable);
         StringBuilder asciidoc = new StringBuilder();
 
-        // Добавляем описание таблицы, если оно задано
+        // Add table description if it is specified
         if (reportTable.description() != null && !reportTable.description().isEmpty()) {
             asciidoc.append(".").append(reportTable.description()).append("\n");
         }
 
-        // Начинаем таблицу AsciiDoc
+        // Start the AsciiDoc table
         asciidoc.append("|===\n");
 
-        // Генерация заголовков столбцов
+        // Generate column headers
         for (int i = 0; i < reportTable.columns().size(); i++) {
             String column = reportTable.columns().get(i);
             asciidoc.append("| ").append(padRight(column, columnWidths.get(i))).append(" ");
         }
         asciidoc.append("|\n");
 
-        // Генерация строк таблицы
+        // Generate table rows
         for (List<Object> entry : reportTable.entries()) {
             for (int i = 0; i < entry.size(); i++) {
                 String value = entry.get(i) != null ? entry.get(i).toString() : "";
@@ -55,13 +55,13 @@ public class AsciiDocTableFormatter implements TableFormatter {
             asciidoc.append("|\n");
         }
 
-        // Завершаем таблицу AsciiDoc
+        // End the AsciiDoc table
         asciidoc.append("|===\n");
 
         return asciidoc.toString();
     }
 
-    // Вспомогательный метод для выравнивания текста до нужной ширины
+    // Helper method to align text to the required width
     private String padRight(String text, int width) {
         return String.format("%-" + width + "s", text);
     }

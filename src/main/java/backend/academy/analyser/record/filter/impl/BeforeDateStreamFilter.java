@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class BeforeDateStreamFilter implements StreamFilter<LocalDate> {
     @Override
-    public Stream<LogRecord> applyFilter(Stream<LogRecord> stream, LocalDate value) {
+    public Stream<LogRecord> filterStream(Stream<LogRecord> stream, LocalDate value) {
         return stream.filter(r -> r.timeZoned()
             .isBefore(value.atStartOfDay(ZoneId.systemDefault())));
     }

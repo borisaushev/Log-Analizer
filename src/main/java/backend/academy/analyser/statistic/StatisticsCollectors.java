@@ -5,7 +5,6 @@ import backend.academy.analyser.statistic.impl.LeastRequestedResourcesStatisticC
 import backend.academy.analyser.statistic.impl.MostRequestedResourcesStatisticCollector;
 import backend.academy.analyser.statistic.impl.TopResponseCodesStatisticCollector;
 
-//TODO: add new real
 public enum StatisticsCollectors {
     GENERAL(new GeneralRequestStatisticCollector()),
     LEAST_REQUESTED_RESOURCES(new LeastRequestedResourcesStatisticCollector()),

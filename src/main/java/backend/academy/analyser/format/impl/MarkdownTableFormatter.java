@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MarkdownTableFormatter implements TableFormatter {
-    // Метод для вычисления максимальной ширины для каждого столбца
+    // Method to calculate the maximum width for each column
     private List<Integer> calculateColumnWidths(ReportTable reportTable) {
         List<Integer> widths = new ArrayList<>();
 
-        // Начальные значения ширин — это длины заголовков столбцов
+        // Initial widths are set to the lengths of column headers
         for (String column : reportTable.columns()) {
             widths.add(column.length());
         }
 
-        // Проходим по каждой записи и обновляем ширину для каждого столбца
+        // Iterate through each entry and update the width for each column
         for (List<Object> entry : reportTable.entries()) {
             for (int i = 0; i < entry.size(); i++) {
                 int valueLength = entry.get(i) != null ? entry.get(i).toString().length() : 0;
@@ -34,7 +34,7 @@ public class MarkdownTableFormatter implements TableFormatter {
         // Adding table description
         markdown.append("### ").append(reportTable.description()).append("\n");
 
-        // Генерация заголовков столбцов
+        // Generate column headers
         markdown.append("| ");
         for (int i = 0; i < reportTable.columns().size(); i++) {
             String column = reportTable.columns().get(i);
@@ -42,14 +42,14 @@ public class MarkdownTableFormatter implements TableFormatter {
         }
         markdown.append("\n");
 
-        // Разделитель для заголовков
+        // Header separator
         markdown.append("|");
         for (int width : columnWidths) {
             markdown.append(" ").append("-".repeat(width)).append(" |");
         }
         markdown.append("\n");
 
-        // Генерация строк таблицы
+        // Generate table rows
         for (List<Object> entry : reportTable.entries()) {
             markdown.append("| ");
             for (int i = 0; i < entry.size(); i++) {
@@ -62,7 +62,7 @@ public class MarkdownTableFormatter implements TableFormatter {
         return markdown.toString();
     }
 
-    // Вспомогательный метод для выравнивания текста до нужной ширины
+    // Helper method to align text to the required width
     private String padRight(String text, int width) {
         return String.format("%-" + width + "s", text);
     }
