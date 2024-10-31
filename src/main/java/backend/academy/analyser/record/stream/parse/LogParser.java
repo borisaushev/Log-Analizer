@@ -15,7 +15,8 @@ public class LogParser {
         "^(\\S+)\\s+-\\s+(\\S+)\\s+\\[(.+?)]\\s+\"(.+?)\"\\s+(\\d{3})\\s+(\\d+)\\s+\"(.*?)\"\\s+\"(.*?)\"$"
     );
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.of("RUS"));
+    private static final DateTimeFormatter DATE_FORMATTER =
+        DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.of("RUS"));
 
     //TODO: document
     public static LogRecord parseLogLine(String logLine) {
@@ -36,7 +37,8 @@ public class LogParser {
         String httpReferer = matcher.group(7).equals("-") ? null : matcher.group(7);
         String httpUserAgent = matcher.group(8);
 
-        return new LogRecord(remoteAddress, remoteUser, timeZoned, httpMethod, uri, httpVersion, status, bodyBytesSent, httpReferer, httpUserAgent);
+        return new LogRecord(remoteAddress, remoteUser, timeZoned, httpMethod, uri, httpVersion, status, bodyBytesSent,
+            httpReferer, httpUserAgent);
     }
 
     //TODO: document

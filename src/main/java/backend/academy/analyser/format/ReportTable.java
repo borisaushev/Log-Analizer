@@ -1,8 +1,8 @@
 package backend.academy.analyser.format;
 
-import lombok.Getter;
 import java.util.LinkedList;
 import java.util.List;
+import lombok.Getter;
 
 @Getter
 public class ReportTable {
@@ -16,8 +16,8 @@ public class ReportTable {
         this.entries = new LinkedList<>();
     }
 
-    public void addEntry(Object ... values) {
-        if(values.length != columns.size()) {
+    public void addEntry(Object... values) {
+        if (values.length != columns.size()) {
             throw new IllegalArgumentException(
                 "Expected " + columns.size() + " arguments, but found " + values.length
             );

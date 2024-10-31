@@ -1,7 +1,7 @@
 package backend.academy.analyser.record.stream.source.impl;
 
-import backend.academy.analyser.record.stream.parse.LogParser;
 import backend.academy.analyser.record.LogRecord;
+import backend.academy.analyser.record.stream.parse.LogParser;
 import backend.academy.analyser.record.stream.source.LogRecordStreamSource;
 import java.io.IOException;
 import java.nio.file.Files;

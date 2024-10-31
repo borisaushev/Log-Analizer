@@ -1,8 +1,8 @@
 package backend.academy.analyser.statistic.impl;
 
+import backend.academy.analyser.format.ReportTable;
 import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.statistic.StatisticsCollector;
-import backend.academy.analyser.format.ReportTable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

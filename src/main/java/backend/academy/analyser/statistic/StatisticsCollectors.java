@@ -12,6 +12,7 @@ public enum StatisticsCollectors {
     TOP_RESPONSE_CODES(new TopResponseCodesStatisticCollector());
 
     public final StatisticsCollector strategy;
+
     StatisticsCollectors(StatisticsCollector strategy) {
         this.strategy = strategy;
     }

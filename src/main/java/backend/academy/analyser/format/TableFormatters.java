@@ -9,6 +9,7 @@ public enum TableFormatters {
 
     public final String value;
     public final TableFormatter strategy;
+
     TableFormatters(String value, TableFormatter strategy) {
         this.value = value;
         this.strategy = strategy;

@@ -2,8 +2,8 @@ package backend.academy.analyser.arguments;
 
 import backend.academy.analyser.arguments.converter.LocalDateConverter;
 import com.beust.jcommander.Parameter;
-import lombok.Getter;
 import java.time.LocalDate;
+import lombok.Getter;
 
 @Getter
 public class Arguments {

@@ -3,11 +3,13 @@ package backend.academy.analyser.record.arguments;
 import backend.academy.analyser.LogAnalyser;
 import backend.academy.analyser.arguments.Arguments;
 import com.beust.jcommander.JCommander;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ArgumentsTest {
     @Test
@@ -77,7 +79,7 @@ class ArgumentsTest {
             "--notReal", "RyanGosling"
         };
         Arguments jArgs = new Arguments();
-        
+
         assertDoesNotThrow(() -> new LogAnalyser().parseArguments(jArgs, args));
     }
 }

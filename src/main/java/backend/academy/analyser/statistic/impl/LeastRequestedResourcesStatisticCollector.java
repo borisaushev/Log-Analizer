@@ -1,12 +1,12 @@
 package backend.academy.analyser.statistic.impl;
 
+import backend.academy.analyser.format.ReportTable;
 import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.statistic.StatisticsCollector;
-import backend.academy.analyser.format.ReportTable;
-import org.apache.commons.lang3.tuple.Pair;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class LeastRequestedResourcesStatisticCollector implements StatisticsCollector {
     private final Map<String, Integer> frequencyMap = new HashMap<>();
@@ -25,13 +25,13 @@ public class LeastRequestedResourcesStatisticCollector implements StatisticsColl
 
     @Override
     public ReportTable getStatistic() {
-        List<Pair<String, Integer>> bottomList =getBottom3StringAndCount();
+        List<Pair<String, Integer>> bottomList = getBottom3StringAndCount();
 
         ReportTable table = new ReportTable(
             "Least requested resources",
             List.of("Resource", "Requests")
         );
-        for(Pair<String, Integer> entry : bottomList) {
+        for (Pair<String, Integer> entry : bottomList) {
             table.addEntry(entry.getKey(), entry.getValue());
         }
 

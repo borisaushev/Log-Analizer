@@ -1,6 +1,9 @@
 package backend.academy.analyser.record.source.impl;
 
 import backend.academy.analyser.record.LogRecord;
+import backend.academy.analyser.record.stream.source.LogRecordStreamSource;
+import backend.academy.analyser.record.stream.source.impl.HttpLogRecordStreamSource;
+import backend.academy.analyser.record.stream.source.impl.LocalFileLogRecordStreamSource;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZonedDateTime;
@@ -8,9 +11,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
-import backend.academy.analyser.record.stream.source.LogRecordStreamSource;
-import backend.academy.analyser.record.stream.source.impl.HttpLogRecordStreamSource;
-import backend.academy.analyser.record.stream.source.impl.LocalFileLogRecordStreamSource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
