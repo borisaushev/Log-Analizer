@@ -13,7 +13,18 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.stream.Stream;
 
+/**
+ * A class that retrieves log records from an HTTP source and provides them as a stream of {@link LogRecord} objects.
+ * Implements the {@link LogRecordStreamSource} interface.
+ */
 public class HttpLogRecordStreamSource implements LogRecordStreamSource {
+
+    /**
+     * Retrieves a stream of {@link LogRecord} objects from the specified HTTP source.
+     *
+     * @param path the URI of the HTTP resource containing log records
+     * @return a stream of {@link LogRecord} objects; returns an empty stream if an error occurs
+     */
     @Override
     public Stream<LogRecord> getLogRecordStream(String path) {
         HttpClient client = HttpClient.newHttpClient();
@@ -31,11 +42,11 @@ public class HttpLogRecordStreamSource implements LogRecordStreamSource {
                     try {
                         reader.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        throw new RuntimeException("Unable to close InputStream", e);
                     }
                 });
         } catch (IOException | InterruptedException exc) {
-            return Stream.of();
+            throw new RuntimeException("Error occurred reading remote file", exc);
         }
     }
 }

@@ -1,4 +1,4 @@
-package backend.academy.analyser.record.arguments;
+package backend.academy.analyser.arguments;
 
 import backend.academy.analyser.LogAnalyser;
 import backend.academy.analyser.arguments.Arguments;

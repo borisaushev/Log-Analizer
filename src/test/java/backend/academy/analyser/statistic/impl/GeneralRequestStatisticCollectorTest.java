@@ -45,6 +45,6 @@ class GeneralRequestStatisticCollectorTest {
     }
 
     private boolean equalsWithAccuracy(long expected, long value) {
-        return Math.abs(expected - value) <= expected * RELATIVE_ACCURACY;
+        return Math.abs(expected - value) <= RELATIVE_ACCURACY * expected;
     }
 }

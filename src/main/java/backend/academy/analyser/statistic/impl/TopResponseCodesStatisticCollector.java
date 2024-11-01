@@ -8,14 +8,24 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * A class for collecting statistics on the top response codes from HTTP log records.
+ * This collector tracks the frequency of HTTP status codes and provides a report
+ * of the three most common response codes.
+ */
 public class TopResponseCodesStatisticCollector implements StatisticsCollector {
+
+    /**
+     * A map that holds the frequency of each HTTP status code.
+     */
     private final Map<Integer, Integer> frequencyMap = new HashMap<>();
 
-    @Override
-    public void clear() {
-        frequencyMap.clear();
-    }
-
+    /**
+     * Includes a log record in the statistics collection by updating the frequency count
+     * for the HTTP status code associated with the log record.
+     *
+     * @param logRecord the log record to include; the status code will be extracted and its frequency updated
+     */
     @Override
     public void include(LogRecord logRecord) {
         int statusCode = logRecord.statusCode();
@@ -23,6 +33,11 @@ public class TopResponseCodesStatisticCollector implements StatisticsCollector {
         frequencyMap.put(statusCode, frequency);
     }
 
+    /**
+     * Generates a report table summarizing the top response codes.
+     *
+     * @return a {@link ReportTable} containing the three most common response codes and their counts
+     */
     @Override
     public ReportTable getStatistic() {
         List<Pair<Integer, Integer>> topList = getTop3CodesAndCount();
@@ -38,6 +53,11 @@ public class TopResponseCodesStatisticCollector implements StatisticsCollector {
         return table;
     }
 
+    /**
+     * Retrieves the three most common response codes and their frequencies.
+     *
+     * @return a list of 3 pairs containing the response codes and their respective counts
+     */
     public List<Pair<Integer, Integer>> getTop3CodesAndCount() {
         int top1 = -1;
         int top2 = -1;

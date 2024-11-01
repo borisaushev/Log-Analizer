@@ -8,14 +8,24 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * A class for collecting statistics on the least requested resources from HTTP log records.
+ * This collector tracks the frequency of requests for each resource URI and provides a
+ * report of the three least requested resources.
+ */
 public class LeastRequestedResourcesStatisticCollector implements StatisticsCollector {
+
+    /**
+     * A map that holds the frequency of requests for each resource URI.
+     */
     private final Map<String, Integer> frequencyMap = new HashMap<>();
 
-    @Override
-    public void clear() {
-        frequencyMap.clear();
-    }
-
+    /**
+     * Includes a log record in the statistics collection by updating the frequency count
+     * for the resource URI associated with the log record.
+     *
+     * @param logRecord the log record to include; the URI will be extracted and its frequency updated
+     */
     @Override
     public void include(LogRecord logRecord) {
         String uri = logRecord.uri();
@@ -23,6 +33,11 @@ public class LeastRequestedResourcesStatisticCollector implements StatisticsColl
         frequencyMap.put(uri, frequency);
     }
 
+    /**
+     * Generates a report table summarizing the least requested resources.
+     *
+     * @return a {@link ReportTable} containing the three least requested resources and their request counts
+     */
     @Override
     public ReportTable getStatistic() {
         List<Pair<String, Integer>> bottomList = getBottom3StringAndCount();
@@ -38,7 +53,12 @@ public class LeastRequestedResourcesStatisticCollector implements StatisticsColl
         return table;
     }
 
-    public List<Pair<String, Integer>> getBottom3StringAndCount() {
+    /**
+     * Retrieves the three least requested resources and their request counts.
+     *
+     * @return a list of 3 pairs containing the resource URIs and their respective request counts
+     */
+    private List<Pair<String, Integer>> getBottom3StringAndCount() {
         String bottom1 = "";
         String bottom2 = "";
         String bottom3 = "";

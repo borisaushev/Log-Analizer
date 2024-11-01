@@ -1,4 +1,4 @@
-package backend.academy.analyser.record.source;
+package backend.academy.analyser.record.stream.source;
 
 import backend.academy.analyser.record.stream.source.LogRecordStreamSources;
 import org.junit.jupiter.api.DisplayName;
