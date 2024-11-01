@@ -5,7 +5,6 @@ import backend.academy.analyser.record.stream.parse.LogParser;
 import backend.academy.analyser.record.stream.source.LogRecordStreamSource;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
@@ -24,7 +23,7 @@ public class LocalFileLogRecordStreamSource implements LogRecordStreamSource {
     @Override
     public Stream<LogRecord> getLogRecordStream(String path) {
         Path filePath = Path.of(path);
-        if(!Files.exists(filePath)) {
+        if (!Files.exists(filePath)) {
             throw new RuntimeException("File not found");
         }
 

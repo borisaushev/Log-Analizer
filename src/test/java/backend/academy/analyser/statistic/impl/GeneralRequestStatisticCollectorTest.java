@@ -32,8 +32,8 @@ class GeneralRequestStatisticCollectorTest {
         }
         long expectedAverage = (long) ((double) (sum) / list.size());
         long expectedPercentile = list.get((int) (0.95 * list.size()));
-        long expectedMax = list.stream().max(Integer::compareTo).get();
-        long expectedMin = list.stream().min(Integer::compareTo).get();
+        long expectedMax = list.stream().max(Integer::compareTo).orElseThrow();
+        long expectedMin = list.stream().min(Integer::compareTo).orElseThrow();
 
         List<List<Object>> entries = statisticCollector.getStatistic().entries();
 

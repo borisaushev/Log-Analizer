@@ -49,11 +49,12 @@ public class GeneralRequestStatisticCollector implements StatisticsCollector {
     @Override
     public ReportTable getStatistic() {
         long count = sketch.isEmpty() ? 0 : (long) sketch.getCount();
-        if(sketch.isEmpty()) {
+        if (sketch.isEmpty()) {
             sketch.accept(0); // Accepting a zero value to ensure non-empty statistics
         }
         long average = (long) sketch.getAverage();
-        long percentile = (long) sketch.getValueAtQuantile(0.95);
+        final double quantile = 0.95;
+        long percentile = (long) sketch.getValueAtQuantile(quantile);
         long max = (long) sketch.getMaxValue();
         long min = (long) sketch.getMinValue();
 

@@ -97,9 +97,9 @@ public class LeastRequestedResourcesStatisticCollector implements StatisticsColl
         }
 
         return List.of(
-            Pair.of(bottom1, bottom1Count),
-            Pair.of(bottom2, bottom2Count),
-            Pair.of(bottom3, bottom3Count)
+            Pair.of(bottom1, bottom1Count == Integer.MAX_VALUE ? 0 : bottom1Count),
+            Pair.of(bottom2, bottom2Count == Integer.MAX_VALUE ? 0 : bottom2Count),
+            Pair.of(bottom3, bottom3Count == Integer.MAX_VALUE ? 0 : bottom3Count)
         );
     }
 }

@@ -1,4 +1,4 @@
-package backend.academy.analyser.record.filter.impl;
+package backend.academy.analyser.record.stream.filter.impl;
 
 import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.record.stream.parse.LogParser;
@@ -25,11 +25,13 @@ public class DateStreamFilterTest {
         217.168.17.5 - - [21/May/2015:08:05:12 +0000] "GET /downloads/product_2 HTTP/1.1" 200 3316 "-" "-"
         """;
 
+    AfterDateStreamFilter afterDateFilter = new AfterDateStreamFilter();
+    BeforeDateStreamFilter beforeDateFilter = new BeforeDateStreamFilter();
+
     @DisplayName("Date after filter")
     @ParameterizedTest
     @CsvSource({"2015-05-21,2", "2015-05-25,0", "2015-05-01,11"})
     public void applyAfterDateFilterTest(String afterDate, int expectedCount) {
-        AfterDateStreamFilter afterDateFilter = new AfterDateStreamFilter();
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
         Stream<LogRecord> afterDateStream = afterDateFilter.filterStream(stream, LocalDate.parse(afterDate));
@@ -41,7 +43,6 @@ public class DateStreamFilterTest {
     @ParameterizedTest
     @CsvSource({"2015-05-25,11", "2015-05-21,9", "2015-05-01,0"})
     public void applyBeforeDateFilterTest(String beforeDate, int expectedCount) {
-        BeforeDateStreamFilter beforeDateFilter = new BeforeDateStreamFilter();
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
         Stream<LogRecord> beforeDateStream = beforeDateFilter.filterStream(stream, LocalDate.parse(beforeDate));

@@ -1,6 +1,8 @@
 package backend.academy.analyser.arguments;
 
 import backend.academy.analyser.arguments.converter.LocalDateConverter;
+import backend.academy.analyser.arguments.converter.RecordFieldConverter;
+import backend.academy.analyser.record.LogRecordField;
 import com.beust.jcommander.Parameter;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -74,4 +76,24 @@ public class Arguments {
         description = "Output format"
     )
     private String format;
+
+    /**
+     * Field to filter, must be one of
+     * LogRecordField enum specified values
+     */
+    @Parameter(
+        names = {"--filter-field"},
+        description = "field to filter",
+        converter = RecordFieldConverter.class
+    )
+    private LogRecordField filterField;
+
+    /**
+     * Value to filter
+     */
+    @Parameter(
+        names = {"--filter-value"},
+        description = "value to filter"
+    )
+    private String filterValue;
 }

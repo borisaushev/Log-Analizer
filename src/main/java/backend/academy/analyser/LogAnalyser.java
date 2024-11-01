@@ -4,20 +4,25 @@ import backend.academy.analyser.arguments.Arguments;
 import backend.academy.analyser.format.ReportTable;
 import backend.academy.analyser.format.TableFormatters;
 import backend.academy.analyser.record.LogRecord;
-import backend.academy.analyser.record.filter.impl.AfterDateStreamFilter;
-import backend.academy.analyser.record.filter.impl.BeforeDateStreamFilter;
+import backend.academy.analyser.record.LogRecordField;
+import backend.academy.analyser.record.stream.filter.impl.AfterDateStreamFilter;
+import backend.academy.analyser.record.stream.filter.impl.BeforeDateStreamFilter;
+import backend.academy.analyser.record.stream.filter.impl.ValueFilter;
 import backend.academy.analyser.record.stream.source.LogRecordStreamSources;
 import backend.academy.analyser.statistic.StatisticsCollectors;
 import com.beust.jcommander.JCommander;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * The LogAnalyser class is responsible for analyzing log records by processing
  * input arguments, applying filters, collecting statistics, and formatting the output.
  */
+@SuppressWarnings({"RegexpSinglelineJava", "ParameterAssignment"})
 public class LogAnalyser {
 
     /**
@@ -26,24 +31,28 @@ public class LogAnalyser {
      * @param args the command-line arguments
      */
     public void analise(String[] args) {
-        // Parsing arguments
-        Arguments arguments = new Arguments();
-        parseArguments(arguments, args);
+        try {
+            // Parsing arguments
+            Arguments arguments = new Arguments();
+            parseArguments(arguments, args);
 
-        // Getting record stream
-        String path = arguments.path();
-        Stream<LogRecord> logRecordStream = getLogRecordStream(path);
+            // Getting record stream
+            String path = arguments.path();
+            Stream<LogRecord> logRecordStream = getLogRecordStream(path);
 
-        // Applying filters
-        logRecordStream = applyFilters(logRecordStream, arguments.dateAfter(), arguments.dateBefore());
+            // Applying filters
+            logRecordStream = applyFilters(logRecordStream, arguments);
 
-        // Collecting statistics
-        List<ReportTable> reportTableList = collectStatistics(logRecordStream);
+            // Collecting statistics
+            List<ReportTable> reportTableList = collectStatistics(logRecordStream);
 
-        // Formatting output
-        String output = formatStatistics(arguments.format(), reportTableList);
+            // Formatting output
+            String output = formatStatistics(arguments.format(), reportTableList);
 
-        System.out.println(output);
+            System.out.println(output);
+        } catch (Exception exc) {
+            System.out.println(exc.getMessage());
+        }
     }
 
     /**
@@ -63,8 +72,8 @@ public class LogAnalyser {
     /**
      * Formats the collected statistics into a string based on the specified format.
      *
-     * @param format           the desired output format
-     * @param reportTableList  the list of report tables to format
+     * @param format          the desired output format
+     * @param reportTableList the list of report tables to format
      * @return a formatted string representation of the statistics
      * @throws IllegalArgumentException if the specified format is not supported
      */
@@ -81,7 +90,8 @@ public class LogAnalyser {
             }
         }
 
-        throw new IllegalArgumentException("Format is not supported");
+        String message = "Format is not supported, please use one of: " + Arrays.toString(TableFormatters.values());
+        throw new IllegalArgumentException(message);
     }
 
     /**
@@ -106,20 +116,24 @@ public class LogAnalyser {
     }
 
     /**
-     * Applies date filters to the log record stream.
+     * Applies date and value filters to the log record stream.
      *
      * @param logRecordStream the original stream of log records
-     * @param dateAfter      the date after which records should be included (can be null)
-     * @param dateBefore     the date before which records should be included (can be null)
+     * @param arguments       parsed arguments
      * @return a filtered stream of log records
      */
     private Stream<LogRecord> applyFilters(
         Stream<LogRecord> logRecordStream,
-        LocalDate dateAfter,
-        LocalDate dateBefore
+        Arguments arguments
     ) {
         AfterDateStreamFilter afterDateStreamFilter = new AfterDateStreamFilter();
         BeforeDateStreamFilter beforeDateStreamFilter = new BeforeDateStreamFilter();
+        ValueFilter valueFilter = new ValueFilter();
+
+        LocalDate dateAfter = arguments.dateAfter();
+        LocalDate dateBefore = arguments.dateBefore();
+        LogRecordField fieldToFilter = arguments.filterField();
+        String valueToFilter = arguments.filterValue();
 
         if (dateAfter != null) {
             logRecordStream = afterDateStreamFilter.filterStream(logRecordStream, dateAfter);
@@ -127,6 +141,10 @@ public class LogAnalyser {
         if (dateBefore != null) {
             logRecordStream = beforeDateStreamFilter.filterStream(logRecordStream, dateBefore);
         }
+        if (fieldToFilter != null && valueToFilter != null) {
+            logRecordStream = valueFilter.filterStream(logRecordStream, Pair.of(fieldToFilter, valueToFilter));
+        }
+
         return logRecordStream;
     }
 

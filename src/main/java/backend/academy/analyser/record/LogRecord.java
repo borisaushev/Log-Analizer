@@ -20,6 +20,7 @@ import java.time.ZonedDateTime;
  * @param httpReferer the referrer URL, or {@code null} if not applicable
  * @param httpUserAgent the user agent string of the client making the request
  */
+@SuppressWarnings("RecordComponentNumber")
 public record LogRecord(
     String remoteAddress,
     String remoteUser,

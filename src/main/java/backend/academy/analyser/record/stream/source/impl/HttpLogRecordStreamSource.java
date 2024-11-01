@@ -3,6 +3,7 @@ package backend.academy.analyser.record.stream.source.impl;
 import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.record.stream.parse.LogParser;
 import backend.academy.analyser.record.stream.source.LogRecordStreamSource;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,12 +12,14 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 /**
  * A class that retrieves log records from an HTTP source and provides them as a stream of {@link LogRecord} objects.
  * Implements the {@link LogRecordStreamSource} interface.
  */
+@SuppressFBWarnings("OS_OPEN_STREAM")
 public class HttpLogRecordStreamSource implements LogRecordStreamSource {
 
     /**
@@ -35,7 +38,7 @@ public class HttpLogRecordStreamSource implements LogRecordStreamSource {
 
         try {
             HttpResponse<InputStream> response = client.send(request, HttpResponse.BodyHandlers.ofInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.body()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(response.body(), StandardCharsets.UTF_8));
             // Wrapping Stream<LogRecord> so that BufferedReader is closed when the Stream is closed
             return LogParser.parseLogStream(reader.lines())
                 .onClose(() -> {

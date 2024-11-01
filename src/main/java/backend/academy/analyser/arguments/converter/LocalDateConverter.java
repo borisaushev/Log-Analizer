@@ -43,7 +43,7 @@ public class LocalDateConverter implements IStringConverter<LocalDate> {
         try {
             return LocalDate.parse(value, FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("Invalid date format. Please use yyyy-MM-dd.");
+            throw new IllegalArgumentException("Invalid date format. Please use yyyy-MM-dd.", e);
         }
     }
 }

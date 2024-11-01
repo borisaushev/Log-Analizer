@@ -1,4 +1,4 @@
-package backend.academy.analyser.record.filter;
+package backend.academy.analyser.record.stream.filter;
 
 import backend.academy.analyser.record.LogRecord;
 import java.util.stream.Stream;
