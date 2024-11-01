@@ -156,7 +156,6 @@ public class LogAnalyser {
      * @throws IllegalArgumentException if the path does not match any existing file sources
      */
     private Stream<LogRecord> getLogRecordStream(String path) {
-        LogRecordStreamSources logRecordStreamSource;
         for (LogRecordStreamSources source : LogRecordStreamSources.values()) {
             if (path.matches(source.pattern)) {
                 return source.strategy.getLogRecordStream(path);

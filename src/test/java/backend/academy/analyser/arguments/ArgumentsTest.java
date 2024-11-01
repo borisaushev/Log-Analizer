@@ -1,7 +1,6 @@
 package backend.academy.analyser.arguments;
 
 import backend.academy.analyser.LogAnalyser;
-import backend.academy.analyser.arguments.Arguments;
 import com.beust.jcommander.JCommander;
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
