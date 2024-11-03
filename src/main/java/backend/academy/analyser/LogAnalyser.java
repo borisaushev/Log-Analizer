@@ -1,6 +1,7 @@
 package backend.academy.analyser;
 
 import backend.academy.analyser.arguments.Arguments;
+import backend.academy.analyser.arguments.exception.InvalidArgumentException;
 import backend.academy.analyser.format.ReportTable;
 import backend.academy.analyser.format.TableFormatters;
 import backend.academy.analyser.record.LogRecord;
@@ -11,6 +12,7 @@ import backend.academy.analyser.record.stream.filter.impl.ValueFilter;
 import backend.academy.analyser.record.stream.source.LogRecordStreamSources;
 import backend.academy.analyser.statistic.StatisticsCollectors;
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -22,7 +24,7 @@ import org.apache.commons.lang3.tuple.Pair;
  * The LogAnalyser class is responsible for analyzing log records by processing
  * input arguments, applying filters, collecting statistics, and formatting the output.
  */
-@SuppressWarnings({"RegexpSinglelineJava", "ParameterAssignment"})
+@SuppressWarnings("ParameterAssignment")
 public class LogAnalyser {
 
     /**
@@ -30,29 +32,23 @@ public class LogAnalyser {
      *
      * @param args the command-line arguments
      */
-    public void analise(String[] args) {
-        try {
-            // Parsing arguments
-            Arguments arguments = new Arguments();
-            parseArguments(arguments, args);
+    public String analise(String[] args) throws InvalidArgumentException {
+        // Parsing arguments
+        Arguments arguments = new Arguments();
+        parseArguments(arguments, args);
 
-            // Getting record stream
-            String path = arguments.path();
-            Stream<LogRecord> logRecordStream = getLogRecordStream(path);
+        // Getting record stream
+        String path = arguments.path();
+        Stream<LogRecord> logRecordStream = getLogRecordStream(path);
 
-            // Applying filters
-            logRecordStream = applyFilters(logRecordStream, arguments);
+        // Applying filters
+        logRecordStream = applyFilters(logRecordStream, arguments);
 
-            // Collecting statistics
-            List<ReportTable> reportTableList = collectStatistics(logRecordStream);
+        // Collecting statistics
+        List<ReportTable> reportTableList = collectStatistics(logRecordStream);
 
-            // Formatting output
-            String output = formatStatistics(arguments.format(), reportTableList);
-
-            System.out.println(output);
-        } catch (Exception exc) {
-            System.out.println(exc.getMessage());
-        }
+        // Formatting output
+        return formatStatistics(arguments.format(), reportTableList);
     }
 
     /**
@@ -61,12 +57,16 @@ public class LogAnalyser {
      * @param arguments the Arguments object to populate with parsed data
      * @param args      the command-line arguments
      */
-    public void parseArguments(Arguments arguments, String[] args) {
-        JCommander commander = JCommander.newBuilder()
-            .addObject(arguments)
-            .acceptUnknownOptions(true)
-            .build();
-        commander.parse(args);
+    public void parseArguments(Arguments arguments, String[] args) throws InvalidArgumentException {
+        try {
+            JCommander commander = JCommander.newBuilder()
+                .addObject(arguments)
+                .acceptUnknownOptions(true)
+                .build();
+            commander.parse(args);
+        } catch (ParameterException exc) {
+            throw new InvalidArgumentException(exc.getMessage(), exc);
+        }
     }
 
     /**
@@ -77,7 +77,7 @@ public class LogAnalyser {
      * @return a formatted string representation of the statistics
      * @throws IllegalArgumentException if the specified format is not supported
      */
-    private String formatStatistics(String format, List<ReportTable> reportTableList) {
+    private String formatStatistics(String format, List<ReportTable> reportTableList) throws InvalidArgumentException {
         StringBuilder output = new StringBuilder();
         for (TableFormatters tableFormatter : TableFormatters.values()) {
             // If we matched the format, return formatted output
@@ -91,7 +91,7 @@ public class LogAnalyser {
         }
 
         String message = "Format is not supported, please use one of: " + Arrays.toString(TableFormatters.values());
-        throw new IllegalArgumentException(message);
+        throw new InvalidArgumentException(message);
     }
 
     /**
@@ -155,13 +155,13 @@ public class LogAnalyser {
      * @return a stream of log records
      * @throws IllegalArgumentException if the path does not match any existing file sources
      */
-    private Stream<LogRecord> getLogRecordStream(String path) {
+    private Stream<LogRecord> getLogRecordStream(String path) throws InvalidArgumentException {
         for (LogRecordStreamSources source : LogRecordStreamSources.values()) {
             if (path.matches(source.pattern)) {
                 return source.strategy.getLogRecordStream(path);
             }
         }
 
-        throw new IllegalArgumentException("Path doesn't match with existing file sources");
+        throw new InvalidArgumentException("Path doesn't match with existing file sources");
     }
 }
