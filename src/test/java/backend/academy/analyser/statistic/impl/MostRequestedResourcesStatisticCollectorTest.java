@@ -12,7 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class MostRequestedResourcesStatisticCollectorTest {
     @DisplayName("Top requested resources")
     @Test
-    public void topRequestedTest() throws InterruptedException {
+    public void topRequestedTest() {
+        //Given
         String path = "src/main/resources/testLogs.txt";
         Stream<LogRecord> stream = new LocalFileLogRecordStreamSource().getLogRecordStream(path);
         StatisticsCollector statisticCollector = new MostRequestedResourcesStatisticCollector();
@@ -20,9 +21,11 @@ class MostRequestedResourcesStatisticCollectorTest {
         String expectedTop2 = "/downloads/product_2";
         String expectedTop3 = "/downloads/product_3";
 
+        //When
         stream.forEach(statisticCollector::include);
         List<List<Object>> entries = statisticCollector.getStatistic().entries();
 
+        //Then
         assertEquals(expectedTop1, entries.get(0).get(0));
         assertEquals(expectedTop2, entries.get(1).get(0));
         assertEquals(expectedTop3, entries.get(2).get(0));

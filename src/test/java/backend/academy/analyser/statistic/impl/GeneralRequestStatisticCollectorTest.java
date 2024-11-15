@@ -16,6 +16,7 @@ class GeneralRequestStatisticCollectorTest {
     @DisplayName("General statistics")
     @Test
     public void generalTest() {
+        //Given
         String path = "src/main/resources/testLogs.txt";
         Stream<LogRecord> stream = new LocalFileLogRecordStreamSource().getLogRecordStream(path);
         LinkedList<Integer> list = new LinkedList<>();
@@ -35,8 +36,10 @@ class GeneralRequestStatisticCollectorTest {
         long expectedMax = list.stream().max(Integer::compareTo).orElseThrow();
         long expectedMin = list.stream().min(Integer::compareTo).orElseThrow();
 
+        //When
         List<List<Object>> entries = statisticCollector.getStatistic().entries();
 
+        //Then
         assertTrue(equalsWithAccuracy(expectedCount, (Long) entries.get(0).get(1)));
         assertTrue(equalsWithAccuracy(expectedAverage, (Long) entries.get(1).get(1)));
         assertTrue(equalsWithAccuracy(expectedPercentile, (Long) entries.get(2).get(1)));

@@ -16,7 +16,7 @@ public enum LogRecordStreamSources {
      * Validates file paths using a specific regex pattern.
      */
     LOCAL_FILE(
-        "((([A-z]:[\\\\/])|([\\\\/]))?([A-z0-9]+([\\\\/]))+)?([A-z0-9]+((\\.[A-z]+)|\\*))",
+        "((([A-z]:[\\\\/])|([\\\\/]))?([A-z0-9]+([\\\\/]))*)?([A-z0-9]+((\\.[A-z]+)|\\*))",
         new LocalFileLogRecordStreamSource()
     ),
 
@@ -42,7 +42,7 @@ public enum LogRecordStreamSources {
     /**
      * Constructor to create an instance of the enum with a specific pattern and strategy.
      *
-     * @param pattern the regex pattern used for validating the source path
+     * @param pattern  the regex pattern used for validating the source path
      * @param strategy the strategy for retrieving log records from the source
      */
     LogRecordStreamSources(String pattern, LogRecordStreamSource strategy) {

@@ -1,6 +1,8 @@
 package backend.academy.analyser.record.stream.filter.impl;
 
 import backend.academy.analyser.record.LogRecord;
+import backend.academy.analyser.record.stream.filter.AfterDateStreamFilterPredicate;
+import backend.academy.analyser.record.stream.filter.BeforeDateStreamFilterPredicate;
 import backend.academy.analyser.record.stream.parse.LogParser;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -10,7 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DateStreamFilterTest {
+public class DateStreamFilterPredicateTest {
     private final String LOGS = """
         93.180.71.3 - - [17/May/2015:08:05:32 +0000] "GET /downloads/product_1 HTTP/1.1" 304 0 "-" "Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.21)"
         93.180.71.3 - - [17/May/2015:08:05:23 +0000] "GET /downloads/product_1 HTTP/1.1" 304 0 "-" "Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.21)"
@@ -25,17 +27,18 @@ public class DateStreamFilterTest {
         217.168.17.5 - - [21/May/2015:08:05:12 +0000] "GET /downloads/product_2 HTTP/1.1" 200 3316 "-" "-"
         """;
 
-    AfterDateStreamFilter afterDateFilter = new AfterDateStreamFilter();
-    BeforeDateStreamFilter beforeDateFilter = new BeforeDateStreamFilter();
-
     @DisplayName("Date after filter")
     @ParameterizedTest
     @CsvSource({"2015-05-21,2", "2015-05-25,0", "2015-05-01,11"})
     public void applyAfterDateFilterTest(String afterDate, int expectedCount) {
+        //Given
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
-        Stream<LogRecord> afterDateStream = afterDateFilter.filterStream(stream, LocalDate.parse(afterDate));
+        //When
+        Stream<LogRecord> afterDateStream =
+            stream.filter(AfterDateStreamFilterPredicate.getPredicate(LocalDate.parse(afterDate)));
 
+        //Then
         assertEquals(expectedCount, afterDateStream.count());
     }
 
@@ -43,10 +46,14 @@ public class DateStreamFilterTest {
     @ParameterizedTest
     @CsvSource({"2015-05-25,11", "2015-05-21,9", "2015-05-01,0"})
     public void applyBeforeDateFilterTest(String beforeDate, int expectedCount) {
+        //Given
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
-        Stream<LogRecord> beforeDateStream = beforeDateFilter.filterStream(stream, LocalDate.parse(beforeDate));
+        //When
+        Stream<LogRecord> beforeDateStream =
+            stream.filter(BeforeDateStreamFilterPredicate.getPredicate(LocalDate.parse(beforeDate)));
 
+        //Then
         assertEquals(expectedCount, beforeDateStream.count());
     }
 }

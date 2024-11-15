@@ -15,7 +15,7 @@ public interface LogRecordStreamSource {
      * @param path the path to the source from which to retrieve log records;
      *             the interpretation of this path depends on the implementing class
      * @return a stream of {@link LogRecord} objects;
-     *         may return an empty stream if no records are available or an error occurs
+     *     may return an empty stream if no records are available or an error occurs
      */
     Stream<LogRecord> getLogRecordStream(String path);
 }

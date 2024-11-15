@@ -10,14 +10,14 @@ import java.util.List;
  * a table into different formats
  * </p>
  */
-public interface TableFormatter {
+public abstract class TableFormatter {
     /**
      * Calculates the maximum width for each column based on the header and entry content.
      *
      * @param reportTable the {@link ReportTable} containing columns and entries to be formatted
      * @return a list of integers representing the maximum width for each column
      */
-    static List<Integer> calculateColumnWidths(ReportTable reportTable) {
+    protected List<Integer> calculateColumnWidths(ReportTable reportTable) {
         List<Integer> widths = new ArrayList<>(reportTable.columns().size());
 
         // Initial widths set to column header lengths
@@ -42,5 +42,5 @@ public interface TableFormatter {
      * @param reportTable the {@link ReportTable} to be formatted
      * @return the formatted string representation of the table
      */
-    String formatTable(ReportTable reportTable);
+    abstract public String formatTable(ReportTable reportTable);
 }

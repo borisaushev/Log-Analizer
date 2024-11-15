@@ -2,12 +2,16 @@ package backend.academy.analyser.record.stream.parse;
 
 import backend.academy.analyser.record.LogRecord;
 import java.time.ZonedDateTime;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LogParserTest {
+
     @Test
+    @DisplayName("parsing log line")
     void parseLogLine() {
+        //Given
         String logLine =
             "93.180.71.3 - - [17/May/2015:08:05:32 +0000] \"GET /downloads/product_1 HTTP/1.1\" 304 0 \"-\" \"Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.21)\"";
         LogRecord expectedLogRecord = new LogRecord(
@@ -23,8 +27,10 @@ class LogParserTest {
             "Debian APT-HTTP/1.3 (0.8.16~exp12ubuntu10.21)" // httpUserAgent
         );
 
+        //When
         LogRecord logRecord = LogParser.parseLogLine(logLine);
 
+        //Then
         assertEquals(expectedLogRecord, logRecord);
     }
 }

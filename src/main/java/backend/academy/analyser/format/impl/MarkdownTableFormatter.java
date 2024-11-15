@@ -11,7 +11,7 @@ import java.util.List;
  * generates a Markdown table with aligned headers and rows.
  * </p>
  */
-public class MarkdownTableFormatter implements TableFormatter {
+public class MarkdownTableFormatter extends TableFormatter {
     /**
      * Formats a {@link ReportTable} as a Markdown table.
      * <p>
@@ -23,7 +23,7 @@ public class MarkdownTableFormatter implements TableFormatter {
      */
     @Override
     public String formatTable(ReportTable reportTable) {
-        List<Integer> columnWidths = TableFormatter.calculateColumnWidths(reportTable);
+        List<Integer> columnWidths = calculateColumnWidths(reportTable);
         StringBuilder markdown = new StringBuilder();
 
         // Add table description if provided

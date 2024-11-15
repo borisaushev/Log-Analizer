@@ -14,6 +14,15 @@ import java.util.stream.Stream;
  */
 @SuppressWarnings("MultipleStringLiterals")
 public class LogParser {
+    public static final String REMOTE_ADDRESS_GROUP = "remoteAddress";
+    public static final String REMOTE_USER_GROUP = "remoteUser";
+    public static final String TIMESTAMP_GROUP = "timestamp";
+    public static final String REQUEST_GROUP = "request";
+    public static final String STATUS_GROUP = "status";
+    public static final String BODY_BYTES_SENT_GROUP = "bodyBytesSent";
+    public static final String HTTP_REFERER_GROUP = "httpReferer";
+    public static final String HTTP_USER_AGENT_GROUP = "httpUserAgent";
+    public static final String NULL_VALUE = "-";
     // Regular expression for parsing log records
     private static final Pattern LOG_PATTERN = Pattern.compile(
         "^(?<remoteAddress>\\S+)\\s+-\\s+(?<remoteUser>\\S+)\\s+"
@@ -41,21 +50,21 @@ public class LogParser {
             return null;
         }
 
-        String remoteAddress = matcher.group("remoteAddress");
-        String remoteUser = Objects.equals(matcher.group("remoteUser"), "-") ? null : matcher.group("remoteUser");
-        ZonedDateTime timeZoned = ZonedDateTime.parse(matcher.group("timestamp"), DATE_FORMATTER);
-        String[] request = matcher.group("request").split(" ");
-        String httpMethod = request.length > 0 ? request[0] : null;
-        String uri = request.length > 1 ? request[1] : null;
-        String httpVersion = request.length > 2 ? request[2] : null;
-
-        int status = Integer.parseInt(matcher.group("status"));
-        int bodyBytesSent = Integer.parseInt(matcher.group("bodyBytesSent"));
-        String httpReferer = Objects.equals(matcher.group("httpReferer"), "-") ? null : matcher.group("httpReferer");
-        String httpUserAgent = matcher.group("httpUserAgent");
-
-        return new LogRecord(remoteAddress, remoteUser, timeZoned, httpMethod, uri, httpVersion, status, bodyBytesSent,
-            httpReferer, httpUserAgent);
+        return LogRecord.builder()
+            .remoteAddress(matcher.group(REMOTE_ADDRESS_GROUP))
+            .remoteUser(
+                Objects.equals(matcher.group(REMOTE_USER_GROUP), NULL_VALUE) ? null : matcher.group("remoteUser"))
+            .timeZoned(ZonedDateTime.parse(matcher.group(TIMESTAMP_GROUP), DATE_FORMATTER))
+            .httpMethod(matcher.group(REQUEST_GROUP).split(" ")[0])
+            .uri(matcher.group(REQUEST_GROUP).split(" ").length > 1 ? matcher.group(REQUEST_GROUP).split(" ")[1] : null)
+            .httpVersion(
+                matcher.group(REQUEST_GROUP).split(" ").length > 2 ? matcher.group(REQUEST_GROUP).split(" ")[2] : null)
+            .statusCode(Integer.parseInt(matcher.group(STATUS_GROUP)))
+            .bodyBytesSent(Integer.parseInt(matcher.group(BODY_BYTES_SENT_GROUP)))
+            .httpReferer(
+                Objects.equals(matcher.group(HTTP_REFERER_GROUP), NULL_VALUE) ? null : matcher.group("httpReferer"))
+            .httpUserAgent(matcher.group(HTTP_USER_AGENT_GROUP))
+            .build();
     }
 
     /**

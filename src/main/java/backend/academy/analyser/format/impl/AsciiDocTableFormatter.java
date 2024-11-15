@@ -11,7 +11,7 @@ import java.util.List;
  * and aligns data in AsciiDoc format with headers and rows.
  * </p>
  */
-public class AsciiDocTableFormatter implements TableFormatter {
+public class AsciiDocTableFormatter extends TableFormatter {
 
     /**
      * Formats a {@link ReportTable} as an AsciiDoc table.
@@ -24,7 +24,7 @@ public class AsciiDocTableFormatter implements TableFormatter {
      */
     @Override
     public String formatTable(ReportTable reportTable) {
-        List<Integer> columnWidths = TableFormatter.calculateColumnWidths(reportTable);
+        List<Integer> columnWidths = calculateColumnWidths(reportTable);
         StringBuilder asciidoc = new StringBuilder();
 
         // Add table description if provided

@@ -6,9 +6,9 @@ import backend.academy.analyser.format.ReportTable;
 import backend.academy.analyser.format.TableFormatters;
 import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.record.LogRecordField;
-import backend.academy.analyser.record.stream.filter.impl.AfterDateStreamFilter;
-import backend.academy.analyser.record.stream.filter.impl.BeforeDateStreamFilter;
-import backend.academy.analyser.record.stream.filter.impl.ValueFilter;
+import backend.academy.analyser.record.stream.filter.AfterDateStreamFilterPredicate;
+import backend.academy.analyser.record.stream.filter.BeforeDateStreamFilterPredicate;
+import backend.academy.analyser.record.stream.filter.ValueFilterPredicate;
 import backend.academy.analyser.record.stream.source.LogRecordStreamSources;
 import backend.academy.analyser.statistic.StatisticsCollectors;
 import com.beust.jcommander.JCommander;
@@ -126,26 +126,16 @@ public class LogAnalyser {
         Stream<LogRecord> logRecordStream,
         Arguments arguments
     ) {
-        AfterDateStreamFilter afterDateStreamFilter = new AfterDateStreamFilter();
-        BeforeDateStreamFilter beforeDateStreamFilter = new BeforeDateStreamFilter();
-        ValueFilter valueFilter = new ValueFilter();
 
         LocalDate dateAfter = arguments.dateAfter();
         LocalDate dateBefore = arguments.dateBefore();
         LogRecordField fieldToFilter = arguments.filterField();
         String valueToFilter = arguments.filterValue();
 
-        if (dateAfter != null) {
-            logRecordStream = afterDateStreamFilter.filterStream(logRecordStream, dateAfter);
-        }
-        if (dateBefore != null) {
-            logRecordStream = beforeDateStreamFilter.filterStream(logRecordStream, dateBefore);
-        }
-        if (fieldToFilter != null && valueToFilter != null) {
-            logRecordStream = valueFilter.filterStream(logRecordStream, Pair.of(fieldToFilter, valueToFilter));
-        }
-
-        return logRecordStream;
+        return logRecordStream
+            .filter(AfterDateStreamFilterPredicate.getPredicate(dateAfter))
+            .filter(BeforeDateStreamFilterPredicate.getPredicate(dateBefore))
+            .filter(ValueFilterPredicate.getPredicate(Pair.of(fieldToFilter, valueToFilter)));
     }
 
     /**

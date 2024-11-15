@@ -2,14 +2,15 @@ package backend.academy.analyser.record.stream.filter.impl;
 
 import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.record.LogRecordField;
+import backend.academy.analyser.record.stream.filter.ValueFilterPredicate;
 import backend.academy.analyser.record.stream.parse.LogParser;
+import java.util.Arrays;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import java.util.Arrays;
-import java.util.stream.Stream;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ValueFilterTest {
     private final String LOGS = """
@@ -26,17 +27,18 @@ class ValueFilterTest {
         217.168.17.5 - - [21/May/2015:08:05:12 +0000] "GET /downloads/product_2 HTTP/1.1" 200 3316 "-" "-"
         """;
 
-    ValueFilter valueFilter = new ValueFilter();
-
     @DisplayName("response code value filter")
     @ParameterizedTest
     @CsvSource({"500, 0", "304,6"})
     public void applyCodeFilterTest(String response, int expectedCount) {
+        // Given
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
+        // When
         Stream<LogRecord> filteredStream =
-            valueFilter.filterStream(stream, Pair.of(LogRecordField.statusCode, response));
+            stream.filter(ValueFilterPredicate.getPredicate(Pair.of(LogRecordField.statusCode, response)));
 
+        // Then
         assertEquals(expectedCount, filteredStream.count());
     }
 
@@ -44,11 +46,14 @@ class ValueFilterTest {
     @ParameterizedTest
     @CsvSource({"GET,6", "POST,5"})
     public void applyMethodFilterTest(String method, int expectedCount) {
+        // Given
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
+        // When
         Stream<LogRecord> filteredStream =
-            valueFilter.filterStream(stream, Pair.of(LogRecordField.httpMethod, method));
+            stream.filter(ValueFilterPredicate.getPredicate(Pair.of(LogRecordField.httpMethod, method)));
 
+        // Then
         assertEquals(expectedCount, filteredStream.count());
     }
 }
