@@ -1,8 +1,6 @@
 package backend.academy.analyser.record.stream.filter.impl;
 
 import backend.academy.analyser.record.LogRecord;
-import backend.academy.analyser.record.stream.filter.AfterDateStreamFilterPredicate;
-import backend.academy.analyser.record.stream.filter.BeforeDateStreamFilterPredicate;
 import backend.academy.analyser.record.stream.parse.LogParser;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -32,11 +30,12 @@ public class DateStreamFilterPredicateTest {
     @CsvSource({"2015-05-21,2", "2015-05-25,0", "2015-05-01,11"})
     public void applyAfterDateFilterTest(String afterDate, int expectedCount) {
         //Given
+        AfterDateStreamFilterFunction afterDateFilter = new AfterDateStreamFilterFunction(LocalDate.parse(afterDate));
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
         //When
         Stream<LogRecord> afterDateStream =
-            stream.filter(AfterDateStreamFilterPredicate.getPredicate(LocalDate.parse(afterDate)));
+            stream.filter(afterDateFilter);
 
         //Then
         assertEquals(expectedCount, afterDateStream.count());
@@ -47,11 +46,12 @@ public class DateStreamFilterPredicateTest {
     @CsvSource({"2015-05-25,11", "2015-05-21,9", "2015-05-01,0"})
     public void applyBeforeDateFilterTest(String beforeDate, int expectedCount) {
         //Given
+        BeforeDateStreamFilterFunction beforeDateFilter = new BeforeDateStreamFilterFunction(LocalDate.parse(beforeDate));
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
         //When
         Stream<LogRecord> beforeDateStream =
-            stream.filter(BeforeDateStreamFilterPredicate.getPredicate(LocalDate.parse(beforeDate)));
+            stream.filter(beforeDateFilter);
 
         //Then
         assertEquals(expectedCount, beforeDateStream.count());

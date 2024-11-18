@@ -2,7 +2,6 @@ package backend.academy.analyser.record.stream.filter.impl;
 
 import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.record.LogRecordField;
-import backend.academy.analyser.record.stream.filter.ValueFilterPredicate;
 import backend.academy.analyser.record.stream.parse.LogParser;
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -33,10 +32,11 @@ class ValueFilterTest {
     public void applyCodeFilterTest(String response, int expectedCount) {
         // Given
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
+        ValueFilterPredicate valueFilter = new ValueFilterPredicate(Pair.of(LogRecordField.statusCode, response));
 
         // When
         Stream<LogRecord> filteredStream =
-            stream.filter(ValueFilterPredicate.getPredicate(Pair.of(LogRecordField.statusCode, response)));
+            stream.filter(valueFilter);
 
         // Then
         assertEquals(expectedCount, filteredStream.count());
@@ -47,11 +47,12 @@ class ValueFilterTest {
     @CsvSource({"GET,6", "POST,5"})
     public void applyMethodFilterTest(String method, int expectedCount) {
         // Given
+        ValueFilterPredicate valueFilter = new ValueFilterPredicate(Pair.of(LogRecordField.httpMethod, method));
         Stream<LogRecord> stream = LogParser.parseLogStream(Arrays.stream(LOGS.split("\n")));
 
         // When
         Stream<LogRecord> filteredStream =
-            stream.filter(ValueFilterPredicate.getPredicate(Pair.of(LogRecordField.httpMethod, method)));
+            stream.filter(valueFilter);
 
         // Then
         assertEquals(expectedCount, filteredStream.count());

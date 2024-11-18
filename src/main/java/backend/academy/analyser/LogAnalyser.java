@@ -6,9 +6,9 @@ import backend.academy.analyser.format.ReportTable;
 import backend.academy.analyser.format.TableFormatters;
 import backend.academy.analyser.record.LogRecord;
 import backend.academy.analyser.record.LogRecordField;
-import backend.academy.analyser.record.stream.filter.AfterDateStreamFilterPredicate;
-import backend.academy.analyser.record.stream.filter.BeforeDateStreamFilterPredicate;
-import backend.academy.analyser.record.stream.filter.ValueFilterPredicate;
+import backend.academy.analyser.record.stream.filter.impl.AfterDateStreamFilterFunction;
+import backend.academy.analyser.record.stream.filter.impl.BeforeDateStreamFilterFunction;
+import backend.academy.analyser.record.stream.filter.impl.ValueFilterPredicate;
 import backend.academy.analyser.record.stream.source.LogRecordStreamSources;
 import backend.academy.analyser.statistic.StatisticsCollectors;
 import com.beust.jcommander.JCommander;
@@ -42,7 +42,7 @@ public class LogAnalyser {
         Stream<LogRecord> logRecordStream = getLogRecordStream(path);
 
         // Applying filters
-        logRecordStream = applyFilters(logRecordStream, arguments);
+        logRecordStream = getFilteredStream(logRecordStream, arguments);
 
         // Collecting statistics
         List<ReportTable> reportTableList = collectStatistics(logRecordStream);
@@ -122,7 +122,7 @@ public class LogAnalyser {
      * @param arguments       parsed arguments
      * @return a filtered stream of log records
      */
-    private Stream<LogRecord> applyFilters(
+    private Stream<LogRecord> getFilteredStream(
         Stream<LogRecord> logRecordStream,
         Arguments arguments
     ) {
@@ -132,10 +132,13 @@ public class LogAnalyser {
         LogRecordField fieldToFilter = arguments.filterField();
         String valueToFilter = arguments.filterValue();
 
+        AfterDateStreamFilterFunction afterDateFilter = new AfterDateStreamFilterFunction(dateAfter);
+        BeforeDateStreamFilterFunction beforeDateFilter = new BeforeDateStreamFilterFunction(dateBefore);
+        ValueFilterPredicate valueFilter = new ValueFilterPredicate(Pair.of(fieldToFilter, valueToFilter));
         return logRecordStream
-            .filter(AfterDateStreamFilterPredicate.getPredicate(dateAfter))
-            .filter(BeforeDateStreamFilterPredicate.getPredicate(dateBefore))
-            .filter(ValueFilterPredicate.getPredicate(Pair.of(fieldToFilter, valueToFilter)));
+            .filter(afterDateFilter)
+            .filter(beforeDateFilter)
+            .filter(valueFilter);
     }
 
     /**
